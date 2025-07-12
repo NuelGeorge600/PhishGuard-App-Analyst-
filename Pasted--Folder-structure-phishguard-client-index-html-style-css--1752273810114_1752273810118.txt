@@ -1,0 +1,140 @@
+// Folder structure: // phishguard/ // ├── client/ // │   ├── index.html // │   ├── style.css // │   └── script.js // ├── server/ // │   ├── index.js // │   └── .env // ├── package.json // └── README.md
+
+// ==== client/index.html ====
+
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhishGuard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>PhishGuard 🔒</h1>
+    <p>Enter a URL to check if it's safe</p>
+    <input type="text" id="urlInput" placeholder="https://example.com" />
+    <button onclick="checkURL()">Check URL</button>
+    <div id="result"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>// ==== client/style.css ==== body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; }
+
+.container { background: white; padding: 2em; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); text-align: center; }
+
+input { padding: 0.5em; width: 80%; margin-bottom: 1em; border: 1px solid #ccc; border-radius: 6px; }
+
+button { padding: 0.6em 1.2em; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
+
+button:hover { background: #0056b3; }
+
+#result { margin-top: 1em; font-weight: bold; }
+
+// ==== client/script.js ==== async function checkURL() { const url = document.getElementById('urlInput').value; const resultDiv = document.getElementById('result'); resultDiv.innerHTML = 'Checking...';
+
+try { const response = await fetch('https://your-backend-url.com/api/scan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url }) });
+
+const data = await response.json();
+if (data.message) {
+  resultDiv.innerHTML = data.message;
+} else {
+  resultDiv.innerHTML = `Detected: ${data.positives} / ${data.total} - ${data.status}`;
+}
+
+} catch (error) { resultDiv.innerHTML = 'Something went wrong. Try again.'; } }
+
+// ==== server/index.js ==== require('dotenv').config(); const express = require('express'); const axios = require('axios'); const cors = require('cors'); const app = express(); const PORT = process.env.PORT || 5000;
+
+app.use(cors()); app.use(express.json());
+
+app.post('/api/scan', async (req, res) => { const { url } = req.body; const apiKey = process.env.VIRUSTOTAL_API_KEY;
+
+try { const response = await axios.post('https://www.virustotal.com/api/v3/urls', new URLSearchParams({ url }), { headers: { 'x-apikey': apiKey } } );
+
+const analysisId = response.data.data.id;
+const result = await axios.get(`https://www.virustotal.com/api/v3/analyses/${analysisId}`, {
+  headers: { 'x-apikey': apiKey }
+});
+
+const stats = result.data.data.attributes.stats;
+const total = Object.values(stats).reduce((a, b) => a + b, 0);
+const positives = stats.malicious;
+
+res.json({ status: result.data.data.attributes.status, total, positives });
+
+} catch (error) { console.error(error); res.json({ message: 'Error analyzing the URL' }); } });
+
+app.listen(PORT, () => console.log(Server running on port ${PORT}));
+
+// ==== server/.env ==== VIRUSTOTAL_API_KEY=your_api_key_here
+
+// ==== README.md ====
+
+PhishGuard 🛡️
+
+A simple JavaScript web app that helps users identify fake or suspicious URLs using the VirusTotal API.
+
+Features
+
+Real-time phishing detection
+
+Simple UI
+
+VirusTotal API Integration
+
+Secure backend with Node.js
+
+
+Stack
+
+Frontend: HTML, CSS, JavaScript
+
+Backend: Node.js, Express.js
+
+External API: VirusTotal
+
+
+How It Works
+
+1. User enters a URL.
+
+
+2. Backend submits the URL to VirusTotal.
+
+
+3. Backend receives scan report.
+
+
+4. Frontend displays results (safe or dangerous).
+
+
+
+Deployment
+
+Frontend
+
+Use Vercel or Netlify for the client folder.
+
+Backend
+
+Deploy to Render or Glitch:
+
+1. Push to GitHub.
+
+
+2. Create .env file with:
+
+VIRUSTOTAL_API_KEY=6ad03b492c54e5e1442566728690bb2ca66987c2cd469a861319fc470b116e9f
+
+
+3. Deploy and use the backend URL in your script.js.
+
+
+
+
+---
+
+Author
+
+Built with Replit by [Emmanuel Obele Ngeyai] as a learning project in cybersecurity and AI.
