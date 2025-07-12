@@ -1,5 +1,6 @@
+
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
@@ -11,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static files from the root directory
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(__dirname));
 
 // Main API endpoint for URL checking
 app.post('/api/check-url', async (req, res) => {
@@ -92,12 +93,12 @@ app.post('/api/check-url', async (req, res) => {
 
 // Root route to serve index.html
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`PhishGuard Server running on port ${PORT}`);
-  console.log(`Environment loaded from: ${path.join(__dirname, '.env')}`);
+  console.log(`Environment loaded from: ${path.join(__dirname, 'server', '.env')}`);
   console.log(`VirusTotal API Key configured: ${process.env.VIRUSTOTAL_API_KEY ? 'Yes' : 'No'}`);
   if (process.env.VIRUSTOTAL_API_KEY) {
     console.log(`API Key preview: ${process.env.VIRUSTOTAL_API_KEY.substring(0, 8)}...`);
