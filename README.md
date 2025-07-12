@@ -1,61 +1,35 @@
+# PhishGuard - Fake URL Checker
 
-# PhishGuard 🛡️
+PhishGuard is a web-based tool designed to help users determine if a given URL is safe or potentially malicious. It performs client-side validation and uses the VirusTotal API to scan URLs for known threats.
 
-A JavaScript web app that helps users identify fake or suspicious URLs using client-side validation and the VirusTotal API.
-
-## Features
-
-- Real-time phishing detection
-- Client-side URL validation
-- VirusTotal API integration
-- Modern responsive UI
-- Secure Node.js backend
-
-## Stack
-
-- **Frontend:** HTML, CSS, JavaScript
-- **Backend:** Node.js, Express.js
-- **External API:** VirusTotal
-
-## How It Works
-
-1. User enters a URL
-2. Client performs immediate validation checks
-3. Backend submits URL to VirusTotal (if API key configured)
-4. Results are displayed with threat analysis
-
-## Setup
-
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-2. Configure VirusTotal API key in `server/.env`:
-   ```
-   VIRUSTOTAL_API_KEY=your_api_key_here
-   ```
-
-3. Start the server:
-   ```bash
-   npm start
-   ```
-
-## Client-Side Validation
-
-The app performs several security checks:
-
-- Protocol validation (http/https)
-- IP address detection
-- Suspicious character detection
-- Phishing keyword detection
-- Subdomain spoofing detection
-- URL shortener detection
-
-## Deployment
-
-Deploy on Replit by clicking the Run button. The app will be available on your Repl's URL.
+🚀 **Live App:** [PhishGuard on Render](https://phishguard-app-analyst-evsg.onrender.com/)
 
 ---
 
-**Author:** Built with ❤️ on Replit by Emmanuel Obele Ngeyai as a learning project in cybersecurity and AI.
+## 🔒 Features
+
+- ✅ Client-side checks for suspicious patterns
+- 🔍 VirusTotal API integration for real-time URL analysis
+- 🧠 Fast, lightweight, and user-friendly interface
+- 🌐 Built with HTML, CSS, JavaScript, Node.js, and Express
+
+---
+
+## 🛠️ How to Deploy (Render)
+
+1. Clone or upload this repo to GitHub
+2. Create a new **Web Service** on [Render](https://render.com)
+3. Set the following:
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+   - **Environment Variable:**
+     - `VIRUSTOTAL_API_KEY=your_api_key_here`
+4. Deploy and enjoy!
+
+---
+
+## 👨‍💻 About the Developer
+
+Emmanuel Obele Ngeyai is a passionate self-taught developer with a strong interest in Cybersecurity and Artificial Intelligence. Driven by curiosity and resilience, Emmanuel built the PhishGuard Fake URL Checker app entirely using a mobile device — demonstrating that innovation and impact are not limited by resources. He is committed to leveraging technology to make the internet safer, smarter, and more secure for everyone.
+
+📧 **Contact:** ngeyaiemmanuel@gmail.com

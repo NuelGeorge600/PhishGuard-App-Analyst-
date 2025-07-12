@@ -1,8 +1,9 @@
+
 {
   "name": "phishguard",
   "version": "1.0.0",
   "description": "A web app that helps users identify fake or suspicious URLs",
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "node server/index.js"
