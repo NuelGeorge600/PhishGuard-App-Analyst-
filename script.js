@@ -13,11 +13,9 @@ async function checkURL() {
   }
 
   try {
-    const INTERNAL_API_KEY = "your_internal_api_key_here";
-
     const response = await fetch('/api/check-url', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': INTERNAL_API_KEY },
+      headers: { 'Content-Type': 'application/json', },
       body: JSON.stringify({ url })
     });
 
