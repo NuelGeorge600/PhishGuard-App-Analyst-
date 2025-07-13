@@ -1,64 +1,57 @@
 
+const checkButton = document.getElementById("checkButton");
+const resultBox = document.getElementById("resultBox");
+const resultText = document.getElementById("resultText");
+const resultIcon = document.getElementById("resultIcon");
 
-const useFakeMode = true; // Set to false to use real API
+const useFakeMode = false; // Set to true to simulate results
 
-async function fakeCheckURL(url) {
-  return {
-    verdict: url.includes("phish") ? "Phishing" : "Safe",
-    score: Math.random() * 100,
-    message: "This is a simulated response (fake mode)."
-  };
-}
+checkButton.addEventListener("click", async () => {
+  const urlInput = document.getElementById("urlInput");
+  const url = urlInput.value.trim();
+  if (!url) return;
 
+  resultBox.classList.add("d-none");
 
-async function checkURL() {
-  const url = document.getElementById('urlInput').value.trim();
-  const resultDiv = document.getElementById('result');
-
-  resultDiv.className = '';
-  resultDiv.innerHTML = '🔍 Checking URL...';
-
-  if (!url) {
-    resultDiv.innerHTML = '⚠️ Please enter a URL';
-    resultDiv.className = 'suspicious';
+  if (useFakeMode) {
+    const isPhishing = url.includes("phish");
+    resultBox.classList.remove("d-none");
+    resultBox.classList.toggle("alert-danger", isPhishing);
+    resultBox.classList.toggle("alert-success", !isPhishing);
+    resultIcon.textContent = isPhishing ? "❌" : "✅";
+    resultText.textContent = isPhishing ? "This URL is potentially malicious." : "This URL appears safe.";
     return;
   }
 
   try {
-    if (useFakeMode) {
-    const fakeResult = await fakeCheckURL(url);
-    displayResult(fakeResult);
-    return;
-  }
-
-  const response = await fetch('/api/check-url', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', },
-      body: JSON.stringify({ url })
+    const response = await fetch("/api/check-url", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": "abc123"
+      },
+      body: JSON.stringify({ url }),
     });
 
     const data = await response.json();
+    resultBox.classList.remove("d-none");
 
-    if (data.error) {
-      resultDiv.innerHTML = `⚠️ ${data.message || data.error}`;
-      resultDiv.className = 'suspicious';
-      return;
-    }
-
-    const positives = data.positives || 0;
-    const total = data.total || 0;
-    const status = data.status || 'unknown';
-
-    if (positives === 0) {
-      resultDiv.innerHTML = `✅ URL appears safe<br>Status: ${status}<br>VirusTotal Results: 0 / ${total}`;
-      resultDiv.className = 'safe';
+    if (response.ok) {
+      const { isPhishing, positives } = data;
+      resultBox.classList.toggle("alert-danger", isPhishing);
+      resultBox.classList.toggle("alert-success", !isPhishing);
+      resultIcon.textContent = isPhishing ? "❌" : "✅";
+      resultText.textContent = isPhishing
+        ? `⚠️ Detected by ${positives} engine(s). This URL may be malicious.`
+        : "✅ This URL appears safe.";
     } else {
-      resultDiv.innerHTML = `🚨 Warning: Suspicious URL detected<br>Status: ${status}<br>VirusTotal Results: ${positives} / ${total}`;
-      resultDiv.className = 'suspicious';
+      throw new Error(data.error || "Unknown error");
     }
-  } catch (err) {
-    resultDiv.innerHTML = '❌ Error checking the URL';
-    resultDiv.className = 'suspicious';
-    console.error(err);
+  } catch (error) {
+    resultBox.classList.remove("d-none", "alert-success");
+    resultBox.classList.add("alert-danger");
+    resultIcon.textContent = "❌";
+    resultText.textContent = "❌ Error checking the URL";
+    console.error("Error:", error.message);
   }
-}
+});
