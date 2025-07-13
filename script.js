@@ -1,4 +1,16 @@
 
+
+const useFakeMode = true; // Set to false to use real API
+
+async function fakeCheckURL(url) {
+  return {
+    verdict: url.includes("phish") ? "Phishing" : "Safe",
+    score: Math.random() * 100,
+    message: "This is a simulated response (fake mode)."
+  };
+}
+
+
 async function checkURL() {
   const url = document.getElementById('urlInput').value.trim();
   const resultDiv = document.getElementById('result');
@@ -13,7 +25,13 @@ async function checkURL() {
   }
 
   try {
-    const response = await fetch('/api/check-url', {
+    if (useFakeMode) {
+    const fakeResult = await fakeCheckURL(url);
+    displayResult(fakeResult);
+    return;
+  }
+
+  const response = await fetch('/api/check-url', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', },
       body: JSON.stringify({ url })
