@@ -1,20 +1,54 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PhishGuard - URL Checker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PhishGuard | Secure Nigeria's Web</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>PhishGuard 🔒</h1>
-    <p>Check if a URL is safe</p>
-    <input type="text" id="urlInput" placeholder="Enter URL to check" />
-    <button onclick="checkURL()">Check URL</button>
-    <div id="result"></div>
-  </div>
+  <header>
+    <h1>PhishGuard</h1>
+    <p>Protecting Nigeria from cyber threats — one click at a time.</p>
+  </header>
+
+  <section id="founder">
+    <h2>About the Founder</h2>
+    <img src="https://via.placeholder.com/150" alt="Emmanuel Obele Ngeyai"/>
+    <p><strong>Emmanuel Obele Ngeyai</strong>, a cybersecurity advocate from Eleme, Rivers State, Nigeria. With a background in Microbiology and training in digital forensics, he's passionate about securing the internet with AI-powered tools.</p>
+  </section>
+
+  <section id="tools">
+    <h2>Scam Website Detector</h2>
+    <input type="text" id="urlInput" placeholder="Enter URL to scan" />
+    <button onclick="scanURL()">Scan</button>
+    <pre id="scanResult"></pre>
+
+    <h2>Email Header Analyzer</h2>
+    <textarea id="emailHeader" placeholder="Paste email header here..."></textarea>
+    <button onclick="analyzeHeader()">Analyze</button>
+    <pre id="headerResult"></pre>
+
+    <h2>Track My Revenue</h2>
+    <input type="text" id="userId" placeholder="Your User ID"/>
+    <button onclick="trackEvent('visit')">Visit</button>
+    <button onclick="trackEvent('signup')">Signup</button>
+    <button onclick="trackEvent('login')">Login</button>
+    <button onclick="trackEvent('reuse')">Reuse</button>
+    <pre id="revenueResult"></pre>
+  </section>
+
+  <section id="chatbot">
+    <h2>PhishGuard AI Assistant</h2>
+    <div id="chatWindow">
+      <p><strong>AI:</strong> Hello, I’m PhishGuardBot! How can I help you protect your digital space today?</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Made with 🛡️ in Nigeria.</p>
+  </footer>
+
   <script src="script.js"></script>
 </body>
 </html>

@@ -1,57 +1,34 @@
+const API_KEY = "abc123";
 
-const checkButton = document.getElementById("checkButton");
-const resultBox = document.getElementById("resultBox");
-const resultText = document.getElementById("resultText");
-const resultIcon = document.getElementById("resultIcon");
+async function scanURL() {
+  const url = document.getElementById("urlInput").value;
+  const res = await fetch("/scan-url", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url: url, api_key: API_KEY })
+  });
+  const data = await res.json();
+  document.getElementById("scanResult").innerText = JSON.stringify(data, null, 2);
+}
 
-const useFakeMode = false; // Set to true to simulate results
+async function analyzeHeader() {
+  const header = document.getElementById("emailHeader").value;
+  const res = await fetch("/analyze-email", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ header: header })
+  });
+  const data = await res.json();
+  document.getElementById("headerResult").innerText = JSON.stringify(data, null, 2);
+}
 
-checkButton.addEventListener("click", async () => {
-  const urlInput = document.getElementById("urlInput");
-  const url = urlInput.value.trim();
-  if (!url) return;
-
-  resultBox.classList.add("d-none");
-
-  if (useFakeMode) {
-    const isPhishing = url.includes("phish");
-    resultBox.classList.remove("d-none");
-    resultBox.classList.toggle("alert-danger", isPhishing);
-    resultBox.classList.toggle("alert-success", !isPhishing);
-    resultIcon.textContent = isPhishing ? "❌" : "✅";
-    resultText.textContent = isPhishing ? "This URL is potentially malicious." : "This URL appears safe.";
-    return;
-  }
-
-  try {
-    const response = await fetch("/api/check-url", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": "abc123"
-      },
-      body: JSON.stringify({ url }),
-    });
-
-    const data = await response.json();
-    resultBox.classList.remove("d-none");
-
-    if (response.ok) {
-      const { isPhishing, positives } = data;
-      resultBox.classList.toggle("alert-danger", isPhishing);
-      resultBox.classList.toggle("alert-success", !isPhishing);
-      resultIcon.textContent = isPhishing ? "❌" : "✅";
-      resultText.textContent = isPhishing
-        ? `⚠️ Detected by ${positives} engine(s). This URL may be malicious.`
-        : "✅ This URL appears safe.";
-    } else {
-      throw new Error(data.error || "Unknown error");
-    }
-  } catch (error) {
-    resultBox.classList.remove("d-none", "alert-success");
-    resultBox.classList.add("alert-danger");
-    resultIcon.textContent = "❌";
-    resultText.textContent = "❌ Error checking the URL";
-    console.error("Error:", error.message);
-  }
-});
+async function trackEvent(eventType) {
+  const userId = document.getElementById("userId").value;
+  const res = await fetch("/event", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: userId, event_type: eventType })
+  });
+  const data = await res.json();
+  document.getElementById("revenueResult").innerText = JSON.stringify(data, null, 2);
+}
